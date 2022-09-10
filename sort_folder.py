@@ -5,8 +5,8 @@ import shutil
 import sys
 
 
-CYRILLIC_SYMBOLS = " абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
-TRANSLATION = (
+CYR_SYM = " абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
+TRANS = (
     "_", "a", "b", "v", "g", "d", "e", "e", "j", "z",
     "i", "j", "k", "l", "m", "n", "o", "p", "r", "s",
     "t", "u", "f", "h", "ts", "ch", "sh", "sch", "",
@@ -15,7 +15,7 @@ TRANSLATION = (
 IGNORE_FOLDERS = ("image", "video", "documents", "audio", "archives")
 TRANS = {}
 
-for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
+for c, l in zip(CYR_SYM, TRANS):
     TRANS[ord(c)] = l
     TRANS[ord(c.upper())] = l.upper()
 
@@ -28,21 +28,16 @@ EXTENSIONS = {
     "archives": ['ZIP', 'GZ', 'TAR']
 }
 
-# func which return transponed name
-
-
-def transpon(file_name):
-    result = file_name.translate(TRANS)
-    for ch in result:
-        if ch in punct:
-            result = result.replace(ch, "_")
-    return result
-
 
 # func which return new_filename path
-def normalize(main_path, file):
-    old_filename, ext = file.stem, file.suffix
-    new_filename = f"{transpon(old_filename)}{ext}"
+def normalize(main_path, file_name):
+    name, ext = file_name.stem, file_name.suffix
+    name = name.translate(TRANS)
+    for ch in name:
+        if ch in punct:
+            name = name.replace(ch, "_")
+
+    new_filename = f"{name}{ext}"
     return main_path.joinpath(new_filename)
 
 
