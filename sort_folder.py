@@ -5,8 +5,8 @@ import shutil
 import sys
 
 
-CYR_SYM = " абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
-TRANS = (
+CYRILLIC_SYMBOLS = " абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
+TRANSLATION = (
     "_", "a", "b", "v", "g", "d", "e", "e", "j", "z",
     "i", "j", "k", "l", "m", "n", "o", "p", "r", "s",
     "t", "u", "f", "h", "ts", "ch", "sh", "sch", "",
@@ -15,7 +15,7 @@ TRANS = (
 IGNORE_FOLDERS = ("image", "video", "documents", "audio", "archives")
 TRANS = {}
 
-for c, l in zip(CYR_SYM, TRANS):
+for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
     TRANS[ord(c)] = l
     TRANS[ord(c.upper())] = l.upper()
 
@@ -45,12 +45,12 @@ def sort_folder(main_path):
     # create an files iterator
     all_files = main_path.iterdir()
 
-    for f in all_files:
+    for item in all_files:
 
         # rename file
-        file = normalize(main_path, f)
+        file = normalize(main_path, item)
         if not os.path.exists(file):
-            os.rename(f, file)
+            os.rename(item, file)
 
         # find a key (which folder we will create) by suffix
         for key, value in EXTENSIONS.items():
@@ -92,7 +92,7 @@ def sort_folder(main_path):
             if file.is_dir() and file.name not in IGNORE_FOLDERS:
 
                 # if folder is empty - delete him
-                if len(os.listdir(file)) == 0:
+                if not os.listdir(file):
                     shutil.rmtree(file)
 
                 # if not empty - recursively call our function again
