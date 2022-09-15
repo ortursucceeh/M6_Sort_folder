@@ -3,30 +3,7 @@ from string import punctuation as punct
 import os
 import shutil
 import sys
-
-
-CYRILLIC_SYMBOLS = " абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
-TRANSLATION = (
-    "_", "a", "b", "v", "g", "d", "e", "e", "j", "z",
-    "i", "j", "k", "l", "m", "n", "o", "p", "r", "s",
-    "t", "u", "f", "h", "ts", "ch", "sh", "sch", "",
-    "y", "", "e", "yu", "ya", "je", "i", "ji", "g"
-)
-IGNORE_FOLDERS = ("image", "video", "documents", "audio", "archives")
-TRANS = {}
-
-for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
-    TRANS[ord(c)] = l
-    TRANS[ord(c.upper())] = l.upper()
-
-
-EXTENSIONS = {
-    "image": ['JPEG', 'PNG', 'JPG', 'SVG'],
-    "video": ['AVI', 'MP4', 'MOV', 'MKV'],
-    "documents": ['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX', 'PPT'],
-    "audio": ['MP3', 'OGG', 'WAV', 'AMR'],
-    "archives": ['ZIP', 'GZ', 'TAR']
-}
+from constants import TRANS, EXTENSIONS, IGNORE_FOLDERS
 
 
 # func which return new_filename path
@@ -72,7 +49,7 @@ def sort_folder(main_path):
                     file_newpath = new_folder_path.joinpath(
                         file.name)
 
-                    # if file is archive - unpack him in the separate folder with the same name(except ext)
+                    # if archive - unpack him in the separate folder
                     if key == "archives":
                         extract_folder_path = new_folder_path.joinpath(
                             file.stem)
@@ -88,7 +65,7 @@ def sort_folder(main_path):
                     # move file
                     shutil.move(file, file_newpath)
 
-            # check if file is folder whith is not in IGRONE_FOLDERS
+            # check if file is folder which is not in IGRONE_FOLDERS
             if file.is_dir() and file.name not in IGNORE_FOLDERS:
 
                 # if folder is empty - delete him
